@@ -1,0 +1,9 @@
+AT_BANNER([the very first group of fabulous tests])
+AT_SETUP([fake0])
+AT_CLEANUP
+
+AT_BANNER([the second group of fabulous tests])
+AT_SETUP([fake])[
+###############]
+AT_CHECK([[:]],0,ignore-nolog,ignore-nolog)
+AT_CLEANUP

@@ -1,0 +1,26 @@
+# @ALL_XT_CSRCS@
+
+subdir = t
+top_srcdir = @top_srcdir@
+abs_top_srcdir = @abs_top_srcdir@
+top_builddir = @top_builddir@
+abs_top_builddir = @abs_top_builddir@
+top_testsrcdir = $(top_builddir)/@l8tf_top_testsrcdir@
+abs_top_testsrcdir = $(abs_top_builddir)/@l8tf_top_testsrcdir@
+
+TESTSUITE = $(top_testsrcdir)/testbuild
+
+check test: atconfig atlocal $(TESTSUITE)
+	@$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
+
+clean:
+	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
+
+atconfig: $(abs_top_builddir)/config.status
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+
+atlocal: $(top_testsrcdir)/t0/atlocal.in $(abs_top_builddir)/config.status
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+
+$(TESTSUITE):
+	@$(MAKE) -C $(top_testsrcdir) testbuild
