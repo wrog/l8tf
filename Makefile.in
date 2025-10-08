@@ -7,8 +7,12 @@ $(TESTSUITE): $(TESTSUITE).at local.at package.m4 version_l8tf.m4
 	$(AUTOTEST) -I m4 -o $@.tmp $@.at
 	mv $@.tmp $@
 
-configure: configure.ac
+configure: configure.ac aclocal.m4 m4/*.m4
+	@echo "[ $? ]"
 	autoconf
+
+aclocal.m4: configure.ac
+	aclocal
 
 clean: clean-keeps-testbuild
 
@@ -19,4 +23,4 @@ distclean: clean
 	rm -rf Makefile config.log config.status
 
 gitclean: distclean
-	rm -rf configure autom4te.cache
+	rm -rf configure aclocal.m4 autom4te.cache
