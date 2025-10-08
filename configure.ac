@@ -10,4 +10,5 @@ AC_CONFIG_COMMANDS([config.lastrun], [[
   chmod -w Makefile t0/atlocal
   echo timestamp > config.lastrun
 ]])
+M5_PROG_NETCAT
 AC_OUTPUT

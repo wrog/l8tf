@@ -1,2 +1,6 @@
 # atlocal
 #    testing environment configuration information
+
+netcat="@NETCAT@"
+nc_close_eof="@NETCAT_CLOSE_EOF@"
+nc_keepalive="@NETCAT_KEEPALIVE@"

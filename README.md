@@ -136,6 +136,27 @@ I suppose.)
     its list of things to remove (you may need to do this manually in
     older/forked versions of LambdaMOO).
 
+## Configuring the test sources manually
+
+This configuration process resolves various issues in the testing
+environment, e.g., which version of `netcat` is to be used.  This
+should only need to be done once on any given test platform or
+whenever new tools (e.g., alternate versions of `netcat`) are
+installed. You can run it manually, e.g.,
+
+```
+    cd `TESTDIR
+    ./configure --with-netcat=bsd
+```
+
+if, say, you want to ensure that the BSD version of netcat is used.
+
+Use `./configure -hs` in `TESTDIR` to see the full range of arguments available.
+
+Not configuring the test source directory means `TESTDIR/configure`
+with no arguments will be invoked at the start of the first actual
+testing run.
+
 ## How to create new tests
 
 (todo.  For now, you'll have to look at the existing ones and
