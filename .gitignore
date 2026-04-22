@@ -1,7 +1,9 @@
 aclocal.m4
 autom4te.cache
 config.cache
+config.lastrun
 config.log
 config.status
 configure
 testbuild
+t0/atlocal

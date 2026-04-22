@@ -13,8 +13,17 @@ configure: configure.ac aclocal.m4 m4/*.m4
 	@echo "[ $? ]"
 	autoconf
 
+config.status: configure
+	./config.status --recheck
+
 aclocal.m4: configure.ac
 	aclocal
+
+Makefile t0/atlocal: config.lastrun
+
+config.lastrun: config.status Makefile.in t0/atlocal.in
+	@echo "[ $? ]"
+	./config.status
 
 clean: clean-keeps-testsuites
 
@@ -22,7 +31,7 @@ clean-keeps-testsuites:
 	rm -rf $(ALL_TESTSUITES)
 
 distclean: clean
-	rm -rf Makefile config.log config.status
+	rm -rf Makefile t0/atlocal config.log config.status config.cache config.lastrun
 
 gitclean: distclean
 	rm -rf configure aclocal.m4 autom4te.cache

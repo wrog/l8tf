@@ -10,8 +10,7 @@ m4_define([ S],
 @%:@  (__file__)
 #
 AC_CONFIG_TESTDIR([t],m4_defn([ S])[/bin])dnl
-AC_CONFIG_FILES([t/Makefile:]m4_defn([ S])[/t0/Makefile.in]
-                [t/atlocal:]m4_defn([ S])[/t0/atlocal.in])dnl
+AC_CONFIG_FILES([t/Makefile:]m4_defn([ S])[/t0/Makefile.in])dnl
 AS_SET_CATFILE([l8tf_top_testsrcdir],[$srcdir],m4_defn([ S]))
 AC_SUBST([l8tf_top_testsrcdir])dnl
 m4_popdef([ S])dnl

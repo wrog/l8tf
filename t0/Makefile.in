@@ -20,8 +20,11 @@ clean:
 atconfig: $(abs_top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
-atlocal: $(top_testsrcdir)/t0/atlocal.in $(abs_top_builddir)/config.status
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+atlocal: $(top_testsrcdir)/config.lastrun
+	cp $(top_testsrcdir)/t0/atlocal $@
 
-$(top_TS):
+$(top_TS): $(top_testsrcdir)/config.lastrun
 	@$(MAKE) -C $(top_testsrcdir) $(TESTSUITE)
+
+$(top_testsrcdir)/config.lastrun:
+	cd $(top_testsrcdir) && { test -r configure || autoreconf; } && ./configure

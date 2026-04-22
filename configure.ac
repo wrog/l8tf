@@ -5,5 +5,9 @@ AC_INIT(m4_defn([L8TF_PACKAGE_NAME]),
   ,m4_defn([L8TF_PACKAGE_URL]))
 AC_CONFIG_SRCDIR([testbuild.at])
 AC_CONFIG_MACRO_DIRS([m4])
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile t0/atlocal])
+AC_CONFIG_COMMANDS([config.lastrun], [[
+  chmod -w Makefile t0/atlocal
+  echo timestamp > config.lastrun
+]])
 AC_OUTPUT
