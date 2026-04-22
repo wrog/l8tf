@@ -8,13 +8,14 @@ abs_top_builddir = @abs_top_builddir@
 top_testsrcdir = $(top_builddir)/@l8tf_top_testsrcdir@
 abs_top_testsrcdir = $(abs_top_builddir)/@l8tf_top_testsrcdir@
 
-TESTSUITE = $(top_testsrcdir)/testbuild
+TESTSUITE = testbuild
+top_TS = $(top_testsrcdir)/$(TESTSUITE)
 
-check test: atconfig atlocal $(TESTSUITE)
-	@$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
+check test: atconfig atlocal $(top_TS)
+	@$(SHELL) '$(top_TS)' $(TESTSUITEFLAGS)
 
 clean:
-	test ! -f '$(TESTSUITE)' || $(SHELL) '$(TESTSUITE)' --clean
+	test ! -f '$(top_TS)' || $(SHELL) '$(top_TS)' --clean
 
 atconfig: $(abs_top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
@@ -22,5 +23,5 @@ atconfig: $(abs_top_builddir)/config.status
 atlocal: $(top_testsrcdir)/t0/atlocal.in $(abs_top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
-$(TESTSUITE):
-	@$(MAKE) -C $(top_testsrcdir) testbuild
+$(top_TS):
+	@$(MAKE) -C $(top_testsrcdir) $(TESTSUITE)

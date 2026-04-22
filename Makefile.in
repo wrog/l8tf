@@ -1,6 +1,8 @@
 
 AUTOM4TE = autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
+ALL_TESTSUITES = testbuild
+
 TESTSUITE = testbuild
 
 $(TESTSUITE): $(TESTSUITE).at local.at package.m4 version_l8tf.m4
@@ -14,10 +16,10 @@ configure: configure.ac aclocal.m4 m4/*.m4
 aclocal.m4: configure.ac
 	aclocal
 
-clean: clean-keeps-testbuild
+clean: clean-keeps-testsuites
 
-clean-keeps-testbuild:
-	rm -rf $(TESTSUITE)
+clean-keeps-testsuites:
+	rm -rf $(ALL_TESTSUITES)
 
 distclean: clean
 	rm -rf Makefile config.log config.status
