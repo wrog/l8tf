@@ -6,8 +6,8 @@
 #   so if you try to m4_include a file by that name, you get warnings.)
 #
 m4_define([L8TF_PACKAGE_NAME],[L8TestFrame])
-m4_define([L8TF_PACKAGE_BUGREPORT],[bug-moo@wrog.net])
-m4_define([L8TF_PACKAGE_URL],[https://wrog.net/moo])
+m4_define([L8TF_PACKAGE_BUGREPORT],[https://github.com/wrog/l8tf/issues])
+m4_define([L8TF_PACKAGE_URL],[https://wrog.net/moo/l8tf])
 m4_define([L8TF_PACKAGE_VERSION],
   m4_bpatsubst(m4_dquote(
       m4_esyscmd([git describe --tags --match='v*' --dirty='?' | sed 's/-g[0-9a-f]*//'])),
