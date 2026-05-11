@@ -2,7 +2,7 @@
 #
 #  Test Suite version
 #
-m4_include([version_l8tf.m4])
+m4_include([package_l8tf.m4])
 #
 #  LambdaMOO version
 #

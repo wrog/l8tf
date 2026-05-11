@@ -5,7 +5,7 @@ ALL_TESTSUITES = testbuild
 
 TESTSUITE = testbuild
 
-$(TESTSUITE): $(TESTSUITE).at local.at package.m4 version_l8tf.m4
+$(TESTSUITE): $(TESTSUITE).at local.at package.m4 package_l8tf.m4
 	$(AUTOTEST) -I m4 -o $@.tmp $@.at
 	mv $@.tmp $@
 

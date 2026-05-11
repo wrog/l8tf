@@ -1,4 +1,4 @@
-# version_l8tf.m4
+# package_l8tf.m4
 #
 #  Test Suite id and version
 #
