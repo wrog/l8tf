@@ -9,16 +9,25 @@ m4_define([ S],
 # Test suite configuration
 @%:@   (__file__)
 # -----------------------------
-
 [l8tf_do_testing=:]
-AC_ARG_ENABLE([testing],[
-AS_HELP_STRING([--disable-testing],[disable test framework])],
+AC_ARG_ENABLE([testing],
+[AS_HELP_STRING([--disable-testing],[do not include test framework])],
 [AS_CASE([$enableval], [no],
   [[l8tf_do_testing=false]])])dnl
 AS_IF([[$l8tf_do_testing]],
   [AC_CONFIG_TESTDIR([t],m4_defn([ S])[/bin])dnl
-  AC_CONFIG_FILES([t/Makefile:]m4_defn([ S])[/t0/Makefile.in])dnl
-AS_SET_CATFILE([l8tf_top_testsrcdir],[$srcdir],m4_defn([ S]))])
+AC_CONFIG_FILES([t/Makefile:]m4_defn([ S])[/t0/Makefile.in])dnl
+AS_SET_CATFILE([l8tf_top_testsrcdir],[$srcdir],m4_defn([ S]))[
+TEST_MAKEVARS='TEST_DISTCLEAN=test_distclean'
+TEST_RULES='test: moo t
+	$(MAKE) -C t
+
+test_distclean:
+	rm -rf t
+'
+]])dnl
+AC_SUBST([TEST_MAKEVARS])dnl
+AC_SUBST([TEST_RULES])dnl
 AC_SUBST([l8tf_top_testsrcdir])dnl
 m4_popdef([ S])dnl
 
