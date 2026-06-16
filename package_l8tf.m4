@@ -18,3 +18,12 @@ m4_define([L8TF_PACKAGE_COMMIT],
       m4_esyscmd([git rev-list --max-count=1 @])),
     [
 ],[]))
+
+m4_define([L8TF_COPYRIGHT],
+[Copyright 2026, Roger F. Crew.])
+
+m4_define([L8TF_LICENSE_SHORT],
+[License GPLv2+/Autoconf: GNU GPL version 2 or later
+or something similar; I have not fully decided yet.  But, essentially:
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.])

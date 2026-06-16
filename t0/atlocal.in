@@ -4,3 +4,5 @@
 netcat="@NETCAT@"
 nc_close_eof="@NETCAT_CLOSE_EOF@"
 nc_keepalive="@NETCAT_KEEPALIVE@"
+
+@l8tf_subj_atlocal@

@@ -1,0 +1,6 @@
+subdir = t
+top_srcdir = @top_srcdir@
+abs_top_srcdir = @abs_top_srcdir@
+top_builddir = @top_builddir@
+abs_top_builddir = @abs_top_builddir@
+TESTSUITE = @test_suite_default@

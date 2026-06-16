@@ -3,11 +3,9 @@ AT_COLOR_TESTS
 
 m4_divert_push([TESTS_BEGIN])
 
-[_l8tf_info="$moo_commit ]AT_PACKAGE_NAME[ commit ]\
+[_l8tf_info="$moo_COMMIT ]AT_PACKAGE_NAME[ commit ]\
 L8TF_PACKAGE_COMMIT L8TF_PACKAGE_NAME L8TF_PACKAGE_VERSION["
 
-printf "||%42s : %s %s\n" $_l8tf_info
-printf "\n"
 printf "%40s : %s %s\n" $_l8tf_info >&]AS_MESSAGE_LOG_FD
 [printf "\n" >&]AS_MESSAGE_LOG_FD
 

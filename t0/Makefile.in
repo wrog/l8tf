@@ -1,30 +1,20 @@
-# @ALL_XT_CSRCS@
+# test run directory makefile
 
-subdir = t
-top_srcdir = @top_srcdir@
-abs_top_srcdir = @abs_top_srcdir@
-top_builddir = @top_builddir@
-abs_top_builddir = @abs_top_builddir@
-top_testsrcdir = $(top_builddir)/@l8tf_top_testsrcdir@
-abs_top_testsrcdir = $(abs_top_builddir)/@l8tf_top_testsrcdir@
+@l8tf_subj_makevars@
 
-TESTSUITE = testbuild
-top_TS = $(top_testsrcdir)/$(TESTSUITE)
+top_alltestdir = $(top_srcdir)/@l8tf_alltestdir@
+abs_top_alltestdir = $(abs_top_srcdir)/@l8tf_alltestdir@
+
+l8tf_rootdir = $(top_alltestdir)/@l8tf_rootdir@
+abs_l8tf_rootdir = $(abs_top_alltestdir)/@l8tf_rootdir@
+
+top_TS = $(top_alltestdir)/$(TESTSUITE)
 
 check test: atconfig atlocal $(top_TS)
-	@$(SHELL) '$(top_TS)' $(TESTSUITEFLAGS)
+	@MAKE=$(MAKE) $(SHELL) '$(top_TS)' $(TESTSUITEFLAGS)
 
 clean:
 	test ! -f '$(top_TS)' || $(SHELL) '$(top_TS)' --clean
 
-atconfig: $(abs_top_builddir)/config.status
+atlocal: $(top_alltestdir)/t0/atlocal.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-
-atlocal: $(top_testsrcdir)/config.lastrun
-	cp $(top_testsrcdir)/t0/atlocal $@
-
-$(top_TS): $(top_testsrcdir)/config.lastrun
-	@$(MAKE) -C $(top_testsrcdir) $(TESTSUITE)
-
-$(top_testsrcdir)/config.lastrun:
-	cd $(top_testsrcdir) && { test -r configure || autoreconf; } && ./configure

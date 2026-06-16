@@ -1,37 +1,33 @@
-
 AUTOM4TE = autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
-ALL_TESTSUITES = testbuild
+ALL_TESTSUITES = main_suite
 
-TESTSUITE = testbuild
+all: configure $(ALL_TESTSUITES)
 
-$(TESTSUITE): $(TESTSUITE).at local.at package.m4 package_l8tf.m4
-	$(AUTOTEST) -I m4 -o $@.tmp $@.at
-	mv $@.tmp $@
+configure: $(l8_abs_root)/alltests_config.ac
+	cat paths.m4 | ( cd $(l8_abs_root); cat - alltests_config.ac | autoconf - ) >$@
+	chmod +x $@
 
-configure: configure.ac aclocal.m4 m4/*.m4
-	@echo "[ $? ]"
-	autoconf
+%:$(l8_abs_root)/%.at
+	cat paths.m4 | ( cd $(l8_abs_root); $(AUTOTEST) - $< ) >"$@"
+	chmod +x $@
 
 config.status: configure
 	./config.status --recheck
 
-aclocal.m4: configure.ac
-	aclocal
+t0/Makefile.in t0/atlocal.in: config.lastrun
 
-Makefile t0/atlocal: config.lastrun
-
-config.lastrun: config.status Makefile.in t0/atlocal.in
+config.lastrun: config.status $(l8_abs_root)/t0/Makefile.in $(l8_abs_root)/t0/atlocal.in
 	@echo "[ $? ]"
 	./config.status
 
-clean: clean-keeps-testsuites
+clean: clean-keeps-testsuites clean-keeps-configure
 
 clean-keeps-testsuites:
-	rm -rf $(ALL_TESTSUITES)
+	rm -f $(ALL_TESTSUITES)
+
+clean-keeps-configure:
+	rm -f configure
 
 distclean: clean
-	rm -rf Makefile t0/atlocal config.log config.status config.cache config.lastrun
-
-gitclean: distclean
-	rm -rf configure aclocal.m4 autom4te.cache
+	rm -rf t0/Makefile.in t0/atlocal.in config.log config.status config.cache config.lastrun

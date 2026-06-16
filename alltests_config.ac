@@ -1,14 +1,45 @@
-m4_include([package_l8tf.m4])
-AC_INIT(m4_defn([L8TF_PACKAGE_NAME]),
-  m4_defn([L8TF_PACKAGE_VERSION]),
-  m4_defn([L8TF_PACKAGE_BUGREPORT]),
-  ,m4_defn([L8TF_PACKAGE_URL]))
-AC_CONFIG_SRCDIR([testbuild.at])
+# config_alltests.ac  -- ./configure script for ALLTESTS directory
+#
+# Creates the shell script for one-time configuration of target
+# platform's 'ALLTESTS' directory (= SUBJ/tests, by default).
+
+# This runs *before* the subject ./configure script and does not
+# need to run again until/unless system tools are installed,
+# updated, or deleted or if directories are moved.
+#
+# Tasks here include
+#    find testing tools (netcat, etc...)
+#    creates test-run-directory template
+#
+# This file is read by autoconf on stdin but expected to be
+# prefaced by the following m4 macro definitions:
+#
+#   L8_PATH_ALLTESTS_FROM_SUBJECT = (tests, by default)
+#   L8_PATH_ROOT_FROM_ALLTESTS = l8tf repository or dist.copy (!!!FIX!!!)
+#
+m4_foreach([_l8], [[ALLTESTS_FROM_SUBJECT], [ROOT_FROM_ALLTESTS]],
+  [m4_ifdef([L8_PATH_]m4_defn([_l8]), [],
+     [m4_append([_l8_fail], [L8_PATH_]m4_defn([_l8]), [, ])])])
+m4_ifdef([_l8_fail],
+  [m4_fatal([missing definitions:  ]m4_defn([_l8_fail]))])
+
+AC_INIT
+AC_CONFIG_SRCDIR([[.l8tf_alltests]])
 AC_CONFIG_MACRO_DIRS([m4])
-AC_CONFIG_FILES([Makefile t0/atlocal])
+M5_PROG_NETCAT
+AC_SUBST([l8tf_alltestdir],m4_defn([L8_PATH_ALLTESTS_FROM_SUBJECT]))
+AC_SUBST([l8tf_rootdir],   m4_defn([L8_PATH_ROOT_FROM_ALLTESTS]))
+
+AC_CONFIG_FILES([t0/Makefile.in:]m4_defn([L8_PATH_ROOT_FROM_ALLTESTS])[/t0/Makefile.in])
+AC_SUBST_FILE([l8tf_subj_makevars])[
+l8tf_subj_makevars=]m4_defn([L8_PATH_ROOT_FROM_ALLTESTS])[/t0/Makefile_subj.in]
+
+AC_CONFIG_FILES([t0/atlocal.in:]m4_defn([L8_PATH_ROOT_FROM_ALLTESTS])[/t0/atlocal.in])
+AC_SUBST_FILE([l8tf_subj_atlocal])[
+l8tf_subj_atlocal=]m4_defn([L8_PATH_ROOT_FROM_ALLTESTS])[/t0/atlocal_subj.in]
+
 AC_CONFIG_COMMANDS([config.lastrun], [[
-  chmod -w Makefile t0/atlocal
+  chmod -w Makefile t0/Makefile.in t0/atlocal.in
   echo timestamp > config.lastrun
 ]])
-M5_PROG_NETCAT
 AC_OUTPUT

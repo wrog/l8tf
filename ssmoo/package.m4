@@ -1,18 +1,12 @@
-# package.m4
-#
-#  Test Suite version
-#
-m4_include([package_l8tf.m4])
-#
-#  LambdaMOO version
-#
+# package.m4  - for LambdaMOO itself
+
 # Autotools people want these values set early as M4 macros.
 # In some cases this is easy:
 #
 m4_define([AT_PACKAGE_NAME],[LambdaMOO])
 m4_define([AT_PACKAGE_TARNAME],m4_defn([AT_PACKAGE_NAME]))
-m4_define([AT_PACKAGE_BUGREPORT],m4_defn([L8TF_PACKAGE_BUGREPORT]))
-m4_define([AT_PACKAGE_URL],m4_defn([L8TF_PACKAGE_URL]))
+m4_define([AT_PACKAGE_BUGREPORT],[[https://github.com/wrog/lambdamoo/issues]])
+m4_define([AT_PACKAGE_STRING],[AT_PACKAGE_NAME[ $PACKAGE_VERSION]])
 
 # AT_PACKAGE_VERSION is a problem: The test suite builds (m4-expands
 # -- recall: target platform may not actually *have* autotools) --
@@ -26,7 +20,6 @@ m4_define([AT_PACKAGE_URL],m4_defn([L8TF_PACKAGE_URL]))
 # where shell variables get expanded.  So this
 
 m4_define([AT_PACKAGE_VERSION],[$PACKAGE_VERSION])
-m4_define([AT_PACKAGE_STRING],[$PACKAGE_STRING])
 
 # works if we set the variables in time.  Normal places to do this are
 # atlocal or atconfig, but those get sourced **way** too late in the
@@ -59,8 +52,7 @@ AS_IF([[test -r "$_l8tf_version_lastck"]],
   AS_VAR_IF([[moo_COMMIT]],[],[[
     moo_COMMIT=`expr "$moo_DEFSRC" : '.*DEF(commit,"\([^"]*\)")'`]])[
   PACKAGE_VERSION=$moo_MAJOR.$moo_MINOR.$moo_RELEASE$moo_EXT]],
-[[PACKAGE_VERSION="x.x.x ($][0 outside test directory?  use -C)"]])
-[PACKAGE_STRING="]AT_PACKAGE_NAME[ $PACKAGE_VERSION (]L8TF_PACKAGE_NAME L8TF_PACKAGE_VERSION[)"]
+[[PACKAGE_VERSION="1.9.??"]])
 
 #--------------------
 m4_divert_pop([HELP])

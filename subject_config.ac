@@ -1,34 +1,62 @@
-m4_pushdef([ S],
-  m4_bpatsubst(m4_dquote(__file__),
-    [config_subject.ac\(.\)$], [\1]))dnl
-m4_define([ S],
-  m4_ifval(m4_defn([ S]),
-    [m4_bpatsubst(m4_dquote(m4_defn([ S])),[[\\/]\(.\)$], [\1])],
-    [[.]]))dnl
-# -----------------------------
-# Test suite configuration
+# ---------------------------------
+# Test run directory configuration
 @%:@   (__file__)
-# -----------------------------
+# ---------------------------------
+m4_foreach([_l8], [[ALLTESTS_FROM_SUBJECT], [ROOT_FROM_SUBJECT], [BUILD_TO_TESTRUN]],
+  [m4_ifdef([L8_PATH_]m4_defn([_l8]),[],
+     [m4_append([_l8_fail], [L8_PATH_]m4_defn([_l8]), [, ])])])dnl
+m4_ifdef([_l8_fail],
+  [m4_fatal([missing definitions:  ]m4_defn([_l8_fail]))])dnl
+
 [l8tf_do_testing=:]
 AC_ARG_ENABLE([testing],
-[AS_HELP_STRING([--disable-testing],[do not include test framework])],
-[AS_CASE([$enableval], [no],
-  [[l8tf_do_testing=false]])])dnl
-AS_IF([[$l8tf_do_testing]],
-  [AC_CONFIG_TESTDIR([t],m4_defn([ S])[/bin])dnl
-AC_CONFIG_FILES([t/Makefile:]m4_defn([ S])[/t0/Makefile.in])dnl
-AS_SET_CATFILE([l8tf_top_testsrcdir],[$srcdir],m4_defn([ S]))[
-TEST_MAKEVARS='TEST_DISTCLEAN=test_distclean'
-TEST_RULES='test: moo t
-	$(MAKE) -C t
+  [AS_HELP_STRING([--disable-testing],[do not include test framework])],
+[AS_CASE([$enableval], [[
+  no]],[[
+    l8tf_do_testing=false]])])
 
-test_distclean:
-	rm -rf t
-'
-]])dnl
+AC_CONFIG_COMMANDS_POST(
+# Do the one-time test-suite configuration (ALLTESTS/configure) if necessary.
+[AS_IF([[$l8tf_do_testing]],
+ [AS_SET_CATFILE([[l8_tests]],[[$srcdir]],['m4_defn([L8_PATH_ALLTESTS_FROM_SUBJECT])'])
+  AS_IF([[test ! -r "$l8_tests/config.lastrun" && test -r "$l8_tests/configure"]],
+  [[_l8_msg="=== switching to '$l8_tests' (from `pwd`)"]
+    AC_MSG_NOTICE([[$_l8_msg]])
+    AC_MSG_NOTICE([[running $SHELL configure]])[
+    (cd $l8_tests; exec $SHELL configure) ||]
+      AC_MSG_ERROR([[$l8_tests/configure failed]])[
+    _l8_msg="=== done with '$l8_tests'"]
+    AC_MSG_NOTICE([[$_l8_msg]])])])])
+
 AC_SUBST([TEST_MAKEVARS])dnl
 AC_SUBST([TEST_RULES])dnl
+AC_SUBST([test_suite_default])dnl
 AC_SUBST([l8tf_top_testsrcdir])dnl
-m4_popdef([ S])dnl
+AS_IF([[$l8tf_do_testing]],
+  [AC_CONFIG_TESTDIR( m4_defn([L8_PATH_BUILD_TO_TESTRUN]), [.])dnl
+m4_foreach([_l8], [[Makefile], [atlocal]], [
+  AC_CONFIG_FILES(    m4_defn([L8_PATH_BUILD_TO_TESTRUN])/m4_defn([_l8])dnl
+[:]m4_defn([L8_PATH_ALLTESTS_FROM_SUBJECT])[/t0/]m4_defn([_l8])[.in])])dnl
+[
+  test_suite_default=main_suite
+  TEST_MAKEVARS=']dnl
+[TEST_CLEAN = test_clean
+TEST_DISTCLEAN = test_distclean
+TEST_GITCLEAN = test_gitclean
+'
+  TEST_RULES=']dnl
+[test:
+	$(MAKE) -C ]m4_defn([L8_PATH_BUILD_TO_TESTRUN])[
 
+test_clean:
+	$(MAKE) -C ]m4_defn([L8_PATH_BUILD_TO_TESTRUN])[ clean
+
+test_distclean:
+	rm -rf ]m4_defn([L8_PATH_BUILD_TO_TESTRUN])[
+
+test_gitclean:
+	rm -rf .l8tf-install.prev .l8tf-install.prev.sh \
+        ]m4_defn([L8_PATH_TESTING_AC]) m4_defn([L8_PATH_ALLTESTS_FROM_SUBJECT])
+
+']])
 # ---- end of test suite config ----------------------------------------
