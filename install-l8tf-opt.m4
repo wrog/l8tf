@@ -367,6 +367,30 @@ want the remaining path to be relative to the `L8TF` root or `SUBJECT`.
 In the former case this directory will be included in any [--distcopy](@%:@user-content---distcopypath-vs---no-distcopy).
 ])
 
+# ------------------------
+#  ---unit-sources=<path>
+#
+L8_OPT_DECLARE([VALUE],[save])(  [], [unit-sources], [[<path>]],
+  [unit test source directory], [],
+  [[l8_unit_sources]])([
+path to the directory where the unit test sources can be found.
+This defaults to the [--specs](@%:@user-content---specspath) directory and
+likewise must begin with either `@R` or `@S`, interpreted
+in the same way.
+])
+
+# ------------------------
+#  ---unit-prefix=<string>
+#
+L8_OPT_DECLARE([VALUE],[save])(  [], [unit-prefix], [[<string>]],
+  [unit test source file prefix], [uT-],
+  [[l8_unit_prefix]])([
+The distinctive prefix, defaulting to `uT-`, that is shared by
+all unit test executables.
+
+(Requiring this makes it easier to write the make rules for unit tests.)
+])
+
 # ============================================================
 
 L8_OPT_DECLARE([SECTION])([Final actions])([
