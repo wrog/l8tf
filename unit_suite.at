@@ -1,0 +1,12 @@
+m4_define([L8_ALL_UNITS],[[0compile],[bquota],[parsnum],[dbio]])
+
+m4_foreach([l8utest],m4_defn([L8_ALL_UNITS]),[
+AT_SETUP([uT-]m4_defn([l8utest]))
+AT_KEYWORDS([l8utest])
+AT_CHECK([[
+${MAKE:-make} -C ../../.. uT-]m4_defn([l8utest])[ || exit 99]],
+,[ignore],[ignore])
+AT_CHECK([[
+uT-]m4_defn([l8utest])],
+[0],[ignore],[ignore])
+AT_CLEANUP])

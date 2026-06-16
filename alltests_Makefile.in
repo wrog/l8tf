@@ -1,6 +1,6 @@
 AUTOM4TE = autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
-ALL_TESTSUITES = main_suite
+ALL_TESTSUITES = main_suite unit_suite
 
 all: configure $(ALL_TESTSUITES)
 
