@@ -1,0 +1,72 @@
+#!/bin/sh
+
+if test -t 1; then
+  at_red=`printf '\033[0;31m'`
+  at_grn=`printf '\033[0;32m'`
+  at_lgn=`printf '\033[1;32m'`
+  at_blu=`printf '\033[1;34m'`
+  at_std=`printf '\033[m'`
+else
+  at_red= at_grn= at_lgn= at_blu= at_std=
+fi
+
+suite=utests
+suite_title='LambdaMOO Unit Tests'
+
+log_preamble ()
+{
+    cat <<END
+##----------------------##
+## $suite_title ##
+##----------------------##
+END
+    sed - -e '1,/command line was:/d' \
+      -e '/  [$] /d' \
+      -e "/${suite}_.*: atconfig:/s/${suite}_[^:]*:/${suite}:/" \
+      -e '/============/,$d'
+}
+
+log_rest ()
+{
+    sed - -e '/command line was:/h' \
+      -e '/  [$] /H' \
+      -e '/=======/p' \
+      -e '1,/=======/d' \
+      -e '/`------/{p;x;a\\
+}'
+}
+
+suite=utests
+cf_list='I32 I64FdQhW Q32b Q64bwxW'
+
+temp_log_file="${suite}__1_$$.log"
+rm -f "$temp_log_file"
+
+for CF in $cf_list; do
+{
+  ln -sf $suite ${suite}_$CF
+  if ./${suite}_$CF --l8cf $CF; then
+     rm -rf ${suite}_$CF ${suite}_$CF.dir;
+  else
+    if test ! -e "$temp_log_file"; then
+      cat ${suite}_$CF.log | log_preamble >$temp_log_file
+    fi
+    cat ${suite}_$CF.log | log_rest >>$temp_log_file
+ fi
+ rm ${suite}_$CF.log
+} 2>&1 1>/dev/null | {
+  printf "%20s ..." $CF
+  result=
+  while read line; do
+    result="$result $line"
+  done
+  if test "x$result" != x; then
+    echo "$at_red$result$at_std"
+  else
+    echo " ${at_grn}ok$at_std"
+  fi
+}
+done
+if test -e "$temp_log_file"; then
+   mv $temp_log_file $suite.log
+fi
