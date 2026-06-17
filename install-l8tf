@@ -1,0 +1,30 @@
+#!/bin/sh
+
+suffix=sh
+actual=$0.$suffix
+base=`basename -- "$0"`
+if test "x$base" = "x--"; then
+    base=`basename "$0"`
+fi
+dir=`dirname -- "$0"`
+
+MAKE=${MAKE-make}
+
+if $MAKE -q -C "$dir" "$base.$suffix" >/dev/null 2>&1; then
+    :
+else
+    printf "Creating '%s'..." "$actual"
+    if $MAKE -s -C "$dir" "$base.$suffix"; then
+        :
+    else
+        status=$?
+        printf "FAILED\n"
+        exit $status
+    fi
+    printf 'done\n\n'
+fi
+
+case $# in
+    0) exec "$actual" ;;
+    *) exec "$actual" "$@" ;;
+esac

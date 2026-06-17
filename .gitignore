@@ -4,5 +4,9 @@ config.lastrun
 config.log
 config.status
 configure
+/install-l8tf.sh
+/.l8tf-install.site
+/.l8tf-install.site.sh
+/Install_L8TF.md
 testbuild
 t0/atlocal
