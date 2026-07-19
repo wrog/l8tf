@@ -1,4 +1,5 @@
 AUTOM4TE = autom4te
+M4SH = $(AUTOM4TE) --language=m4sh
 AUTOTEST = $(AUTOM4TE) --language=autotest
 ALL_TESTSUITES = main_suite unit_suite
 
@@ -11,6 +12,9 @@ configure: $(l8_abs_root)/alltests_config.ac
 %:$(l8_abs_root)/%.at
 	cat paths.m4 | ( cd $(l8_abs_root); $(AUTOTEST) - $< ) >"$@"
 	chmod +x $@
+
+runall: $(l8_abs_root)/runall.m4
+	cat paths.m4 | ( cd $(l8_abs_root); $(M4SH) - runall.m4 ) >$@
 
 config.status: configure
 	./config.status --recheck
