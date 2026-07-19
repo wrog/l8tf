@@ -1,8 +1,38 @@
+AT_TEST_HELPER_FN([[emode_eval]],[[FILENAMES...]],
+[Run a moo server in emergency wizard mode,
+read moocode from FILENAME or stdin; attempt
+to eval() it; results to stdout],
+[ath_out=`{[
+    printf ";;\nreturn %s;\n" "$][1"
+    printf "%s\n" '' '.' 'abort'
+  ]}[ |
+    moo -e -l /dev/null /dev/null /dev/null |
+    sed -e '1,/^MOO (.*): Type one or more lines of code/ d' \
+        -e '/^MOO (.*): Bye.  (NOT saving database)/,$d;/^$/d'`]
+AS_CASE([[$ath_out]],[[
+  *'(End of traceback)
+=> *Aborted*']],[[
+    e2=${ath_out%%'
+'*}
+    emsg=${e2@%:@*': '}
+    printf '%%RAISE: %s' "$emsg"]],[[
+  '** '*' errors during parsing'*]],[[
+    printf '%%SYNTAX']],[[
+  '=> '*]],[[
+    printf '%%=> %s' "${ath_out@%:@'=> '}"]],
+[[printf '?? %s' "$ath_out"]])])
+
 AT_BANNER([the very first group of fabulous tests])
-AT_SETUP([fake0])
+AT_SETUP([expr1])
+AT_CHECK([[ath_fn_emode_eval '3+4']],,[[%=> 7]])
+AT_CLEANUP
+AT_SETUP([expr2])
+AT_CHECK([[ath_fn_emode_eval '3+']],, [[%SYNTAX]])
+AT_CLEANUP
+AT_SETUP([expr3])
+AT_CHECK([[ath_fn_emode_eval '1/0']],,[[%RAISE:  Division by zero]])
 AT_CLEANUP
 
-AT_BANNER([the second group of fabulous tests])
 AT_SETUP([fake])[
 ###############]
 AT_CHECK([[:]],0,ignore-nolog,ignore-nolog)
