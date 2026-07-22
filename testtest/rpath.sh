@@ -122,20 +122,20 @@ autom4te -l m4sh - <<\EOF | sh -s
 m4_include([m4/l8_revpath.m4])
 AS_INIT
 [try () ]{
-    L8_REVERSE_PATH([[xxx]],[[$][1]])[
-    printf "%-42s =>%s<=\n" "$1" "$xxx"]
+   AS_IF([L8_REVERSE_PATH([[xxx]],[[$][1]])],
+ [[  printf "%-42s =>%s<=\n" "$1" "$xxx"]],[[
+     printf 'nope: %s\n' "$1"]])
 }
 [
 try ''
 try .git/branches
 try .git/branches///..
 try ../s2/../expat/../s2/tests
-try ../s2/tests/xx
-try ../s2/tests/xx/yy
+try ../s2/tests
 try ../../../../../../../home/moo/src/git/s2
 try ./.git/./..//single/../
 try /home/moo/src/git
-try /home/moo/src/git/s2/tests/xx
+try /home/moo/src/git/s2/tests
 try /usr/share/autoconf
 ]
 EOF
@@ -145,10 +145,40 @@ EOF
 .git/branches                              =>../..<=
 .git/branches///..                         =>..<=
 ../s2/../expat/../s2/tests                 =>../../l8tf<=
-../s2/tests/xx                             =>../../l8tf<=
-../s2/tests/xx/yy                          =>/home/moo/src/git/l8tf<=
+../s2/tests                                =>../../l8tf<=
 ../../../../../../../home/moo/src/git/s2   =>../l8tf<=
 ./.git/./..//single/../                    =>.<=
 /home/moo/src/git                          =>l8tf<=
-/home/moo/src/git/s2/tests/xx              =>../../l8tf<=
+/home/moo/src/git/s2/tests                 =>../../l8tf<=
 /usr/share/autoconf                        =>../../../home/moo/src/git/l8tf<=
+
+
+
+whereami () { df . | awk 'NR>1{ print $1 }' ; ls -id . ; }
+# rel_path VAR PATHNAME
+#   VAR = (path from cwd to PATHNAME)
+relative_pathname () {
+here=.
+dest=`cd "$2" 2>/dev/null && pwd`
+${dest:+false} : && return 1
+while `cd "$here" 2>/dev/null && pwd=$(pwd) && test "$pwd" != / && case $dest in "$pwd") false ;; "$pwd"/*) false ;; *) : ;; esac `; do
+ here="$here/.."
+done
+( cd "$here" 2>/dev/null ) || return 1;
+suffix=` cd "$here"; pwd=$(pwd); case $pwd in /) printf '%s' "${dest#/}" ;; "$dest") printf '' ;; *) x=${dest#"$pwd/"}; printf '%s' "$x" ;; esac `
+here=${here#./}
+if test x"$suffix" = x; then eval $1=\$here; elif test x"$here" = x.; then eval $1=\$suffix; else eval $1=\$here/\$suffix; fi
+dw=$(cd "$dest"; whereami);
+eval rw=\$\(cd \"\$$1\" \&\& whereami\) || return 1
+test x"$dw" = x"$rw" || return 1
+}
+
+
+cd "/home/moo/git sources/l8tf"
+# for dest in /home/moo/src/git/l8tf/.git/branches /home/moo/src/git/l8tf/.git /home/moo/src/git/l8tf /home/moo/src/git /home/moo/src/git/s2 /home/moo/src /home/moo/src/testb /home/moo /home/moo/info /home /home/rfc / /usr /usr/bin; do
+for dest in '/home/moo/git sources/l8tf/.git/branches' '/home/moo/git sources/l8tf/.git' '/home/moo/git sources/l8tf' '/home/moo/git sources' '/home/moo/git sources/s2' '/home/moo/src' '/home/moo/src/testb' '/home/moo' '/home/moo/info' '/home' '/home/rfc' '/' '/usr' '/usr/bin'; do
+echo
+printf 'dest=%40s\n' "$dest"
+relative_pathname rel "$dest" || echo FAIL
+printf 'rel =%40s\n' "$rel"
+done

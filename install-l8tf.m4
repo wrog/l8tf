@@ -622,9 +622,10 @@ AS_IF([[$l8_do_version]],
 # cd there and adjust $l8_root.
 #
 AS_IF([[$l8_subject_given]],
- [L8_REVERSE_PATH([[_l8_cur]], [[$l8_subject]])
+ [L8_REVERSE_PATH([[_l8_cur]], [[$l8_subject]]) ||
+    l8_fn_fatal "could not cd to --subject ($l8_subject)"
   AS_SET_CATFILE([[l8_root]], [[$_l8_cur]], [[$l8_root]])
-  [cd "$l8_subject" || l8_fn_fatal "could not cd to --subject ($l8_subject)"
+  [cd "$l8_subject"
   l8_fn_msg 1 "Entering subject directory '$l8_subject'"
   l8_fn_msg 1 "L8TF root is now '$l8_root'"
   l8_subject=`pwd`]])
