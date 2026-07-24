@@ -5,7 +5,7 @@
 #  (It turns out that the filename 'version.m4' is reserved by m4sugar
 #   so if you try to m4_include a file by that name, you get warnings.)
 #
-m4_define([L8TF_PACKAGE_NAME],[L8TestFrame])
+m4_define([L8TF_PACKAGE_NAME],[L8TF])
 m4_define([L8TF_PACKAGE_BUGREPORT],[https://github.com/wrog/l8tf/issues])
 m4_define([L8TF_PACKAGE_URL],[https://wrog.net/moo/l8tf])
 m4_define([L8TF_PACKAGE_VERSION],

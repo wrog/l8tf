@@ -647,7 +647,7 @@ AS_IF([[test ! -r configure.ac]],
 #
 [cd "$l8_root" || l8_fn_fatal "could not cd to --l8tf-root ($l8_root)"]
 AS_IF([[test -r "package_l8tf.m4" &&
-    grep -q -E '\[L8TF_PACKAGE_NAME\], *\[L8TestFrame\]' package_l8tf.m4]],[],[[
+    grep -q -E '\[L8TF_PACKAGE_NAME\], *\[L8TF\]' package_l8tf.m4]],[],[[
   l8_fn_fatal "$l8_root:  not an L8TF directory (package_l8tf.m4 missing or weird)"]])
 
 L8_REVERSE_PATH([[l8_root]], [[$l8_subject]])
