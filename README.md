@@ -1,4 +1,4 @@
-# LambdaMOO Test Frame (L8TF)
+# L8TF (LambdaMOO Test Frame)
 
 This is a framework for testing builds of the LambdaMOO server.
 
