@@ -3,6 +3,7 @@
 #include "config.h"
 #include "options.h"
 
+#include <stddef.h>
 #include "my-string.h"
 
 #include "db_io.h"
@@ -410,7 +411,7 @@ print_expected(const char *what, const char *str, size_t limit)
 	while (here < end) {
 	    uint32_t c = *here;
 	    switch (c) {
-	    default:
+	    default: ;
 #if UNICODE_STRINGS
 		size_t cl = clearance_utf(c);
 		if (cl > 1 && end - here >= (ptrdiff_t)cl) {

@@ -1,0 +1,130 @@
+cat <<'END' | autom4te -l m4sh - >test.sh ; sh test.sh
+m4_include([m4/ax_lp.m4])
+m4_map_args_sep([m4_include([m4/l8_]],[[.m4])],[],
+[schedule], [expand_word], [cfname], [seq])
+m4_include([ssmoo/cfname.m4])
+
+AS_INIT
+AS_REQUIRE([L8_SEQ_FNS_PREPARE])
+L8_CFNAME_USE_SCHEMA([MOO])[
+
+eval srcroot=~/src
+test -d "$srcroot/s2" || eval srcroot=~moo/src/git
+suite=$srcroot/s2/tests/unit_suite
+suite_last=
+
+keymask () ]{
+AS_VAR_IF([[suite_last]],[],
+[AS_VAR_SET([[suite_last]],[[`$suite --l8tf-groups=last`]])])[
+_kexp=`$suite --l8tf-groups= $2` || ]
+AS_ERROR([bad key expression: $2],1)[
+l8_fn_seq_from_list $1 $_kexp
+eval $1=\${$1%_$suite_last}
+]}
+
+# [ keymask k "$1" ]
+#
+#
+# AS_ECHO([["$suite_last : >$k<"]])
+# END
+
+[
+slevel=0
+cfglist_0=
+keydflt_0=orig
+foo () ]{[
+case $1 in #(
+keys) :  # echo $1 "$2"
+
+keymask keydflt_$slevel "$2"
+
+;; #(
+open) :  # echo $1 "$2 ⟵ $3"
+
+slevel=$2]
+AS_VAR_SET([[cfglist_$2]],[])
+AS_VAR_COPY([[keydflt_$2]],[[keydflt_$3]])[
+
+;; #(
+close) :]  # echo $1 "$2 ⟵ $3"
+
+AS_VAR_COPY([[_cfglist]],[[cfglist_$3]])
+AS_UNSET([[cfglist_$3]])
+AS_UNSET([[keydflt_$3]])[
+slevel=$2
+for _cfg in $_cfglist; do]
+AS_VAR_IF([[cff_$3_$_cfg]],[],[],[
+AS_VAR_SET_IF([[cff_$2_$_cfg]],
+[[eval l8_fn_seq_union _v \$cff_$2_$_cfg \$cff_$3_$_cfg]
+AS_VAR_COPY([[cff_$2_$_cfg]],[[_v]])],
+[
+AS_VAR_COPY([[cff_$2_$_cfg]],[[cff_$3_$_cfg]])
+AS_VAR_APPEND([[cfglist_$2]],[[" $_cfg"]])])])
+AS_UNSET([[cff_$3_$_cfg]])[
+done
+
+;; #(
+fadd | fdrop) :
+
+keymask _k "$3"]
+AS_VAR_IF([1],[[fadd]],[[_which=union]],[[_which=diff]])
+AS_VAR_COPY([[_cfglist]],[[cfglist_$slevel]])[
+for _cfg in $_cfglist; do]
+AS_IF([L8_CF_PARSE([[$_cfg]])],[],[[continue]])
+AS_VAR_COPY([[_v]],[[cff_${slevel}_$_cfg]])
+AS_VAR_IF([[_v]],[],[],[
+AS_IF([[eval "test $2"]],
+[[eval "l8_fn_seq_$_which cff_${slevel}_$_cfg "'"$_v" "$_k"']])])[
+done
+
+;; #(
+include) :]
+
+AS_VAR_IF([[@%:@]],[3],[[keymask _k "$3"]],[AS_VAR_COPY([[_k]],[[keydflt_$slevel]])])[
+for _ww in `]L8_EXPAND_WORDEXP([["$][2"]])[`; do]
+AS_IF([L8_CF_PARSE([[$_ww]])],[
+L8_CF_TO_CFNAME([[_cfg]])
+],[AS_ECHO([["$ww -> $l8_cf_parse_error"]])])
+AS_VAR_SET_IF([[cff_${slevel}_$_cfg]],
+[[eval "l8_fn_seq_union cff_${slevel}_$_cfg" '"$cff_'${slevel}_$_cfg'" "$_k"']],
+[
+AS_VAR_COPY([[cff_${slevel}_$_cfg]],[[_k]])
+AS_VAR_APPEND([[cfglist_$slevel]],[[" $_cfg"]])])[
+done
+;; #(
+exclude) :]
+
+AS_VAR_IF([[@%:@]],[3],[[keymask _k "$3"]],[[_k=0]])[
+for _ww in `]L8_EXPAND_WORDEXP([["$][2"]])[`; do]
+AS_IF([L8_CF_PARSE([[$_ww]])],[
+L8_CF_TO_CFNAME([[_cfg]])
+],[AS_ECHO([["$ww -> $l8_cf_parse_error"]])])
+AS_VAR_SET_IF([[cff_${slevel}_$_cfg]],
+[AS_VAR_IF([[_k]],[0],
+[AS_VAR_SET([[cff_${slevel}_$_cfg]],[])],
+[[eval "l8_fn_seq_diff cff_${slevel}_$_cfg" '"$cff_'${slevel}_$_cfg'" "$_k"']])])[
+done
+;; #(
+*) echo "$1" '????' ;;
+esac
+]}[
+
+]
+L8_PARSE_SCHEDULE([[foo]],[[ \
+\( :'-k !dbio' \( '(Nbt,Nl)Fd(I32,I64)' \) '{ $moo_cf_net_p = tcp -a $moo_cf_sz_i = i64 }:-k dbio' \) !I32FdNl \
+]])[ ||
+  printf 'error: %s\n' "$_l8_pserr"
+
+#set
+cfglist=`for _cfg in $cfglist_0; do eval k=\\$cff_0_${_cfg}; if test "x$k" = x ; then continue; fi; printf '%s:%s ' "$_cfg" "$k"; done | sort`
+]
+AS_UNSET([[cfglist_0]])[
+
+printf '%s\n' "$cfglist"
+]
+END
+
+
+#   CONFIGS[:*]  for each config add flags
+#   !CONFIGS     subtract configs entirely
+#   {...}:*      filter
