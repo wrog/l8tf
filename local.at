@@ -1,6 +1,14 @@
 AT_INIT()
 AT_COLOR_TESTS
 
+AT_ARG_OPTION_ARG([l8tf-groups],
+[AS_HELP_STRING([--l8tf-groups=],[(for use by L8TF)
+'full': all test group info;
+'last': last test group;
+'':active test groups (use with other args)],[17])])
+m4_divert_once([HELP_END],[AS_IF([[$at_arg_given_l8tf_groups]],
+[AS_CASE([[$at_arg_l8tf_groups]],[[full]],[AS_ECHO_N([["$at_help_all"]])],[[last]],[[for at_group in : $at_groups; do :; done;]AS_ECHO_N([["$at_group"]])],[AS_ECHO_N([["$at_groups"]])]);AS_EXIT(0)])])
+
 m4_divert_push([TESTS_BEGIN])
 
 [_l8tf_info="$moo_COMMIT ]AT_PACKAGE_NAME[ commit ]\

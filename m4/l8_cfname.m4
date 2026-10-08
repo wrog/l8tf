@@ -17,19 +17,20 @@
 #
 # SYNOPSIS
 #   my_cfname.m4:
-#     L8_CFNAME_DECLARE_SCHEMA([MINE],[],[
+#     L8_CFNAME_DECLARE_SCHEMA([MINE],[
 #       # schema definition...
-#     ])
+#     ],...# extra keyword arguments for the [] cmd
+#   )
 #
 #   elsewhere.m4
 #     # declare MY_PARSE(), MY_TO_CFARGS(), MY_TO_CFNAME()
 #     L8_CFNAME_USE_SCHEMA([MINE],[MY_])
 #
 #     # set parse state
-#     MY_PARSE([[Nlt]])
+#     MY_PARSE([[Nbt]])
 #
-#     MY_TO_CFARGS([[cfargs]])   # cfargs=' --enable-net=tcp,local'
-#     MY_TO_CFNAME()             # "Ntl" (canonical cfname) on stdout
+#     MY_TO_CFARGS([[cfargs]])   # cfargs=' --enable-net=tcp,bsd'
+#     MY_TO_CFNAME()             # "Ntb" (canonical cfname) on stdout
 #
 # TERMINOLOGY
 #   "configuration" is a sequence of arguments ('cfarg's) for ./configure
@@ -127,24 +128,25 @@ AX_LP_DEFINE_LANGUAGE([CFNAME], [L8_CF_DEFINE],
 
 
 L8_CF_DEFINE([],
-  # prefix for published shell variables
+  # prefixes for published shell vars, functions, and prepares
   [:var], [[g_sh_prefix_],        [l8_cf_]],
-
   [:var], [[g_fn_prefix_],        [_l8_fn_]],
+  [:var], [[g_prepare_prefix_],   [_L8_CF_]],
+
+  # names of published shell functions
   [:var], [[g_fn_parse],          [parse_cfname]],
   [:var], [[g_fn_to_cfargs],      [parsed_cf_to_cfargs]],
   [:var], [[g_fn_to_cfname],      [parsed_cf_to_cfname]],
 
-  # PREPARE macros that can be [m4/AS/AC]_REQUIREd
-  [:var], [[g_prepare_prefix_],   [_L8_CF_]],
+  # names of PREPARE macros that can be [m4/AS/AC]_REQUIREd
   [:var], [[g_prepare_parse],     [PARSE_PREPARE]],
   [:var], [[g_prepare_to_cfargs], [TO_CFARGS_PREPARE]],
   [:var], [[g_prepare_to_cfname], [TO_CFNAME_PREPARE]],
 
-  # user-selected prefixes (g_fn_sh_,g_fn_prepare)
+  # user-selected prefixes (g_fn,g_prepare)_prefix_
   # are applied to the default names, but if the user
   # specifies a name for a specific routine
-  # (e.g., g_parse_prepare) the full name must given.
+  # (e.g., g_prepare_parse) the full name must given.
   [:fn], [m4_do(
     [ax_lp_check_puts($@)],
     [ax_lp_map_beta_sep([&],

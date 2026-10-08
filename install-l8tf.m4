@@ -547,6 +547,7 @@ l8_root=`dirname -- "$as_myself"`
 # alltests directory
 l8_alltests_given=false
 l8_alltests_from_subject=tests
+l8_subject_from_alltests=..
 l8_alltests_marker=.l8tf_alltests
 l8_alltests_mck='alltests directory created by install-l8tf'
 
@@ -778,7 +779,9 @@ l8_fn_try_create_dir       \
 [cd $l8_root]
 L8_REVERSE_PATH([[l8_root_from_alltests]], [[$l8_alltests_from_root]])
 [cd $l8_subject]
-L8_REVERSE_PATH([[l8_subject_from_alltests]], [[$l8_alltests_from_subject]])
+AS_IF([[$l8_alltests_given]],
+  [L8_REVERSE_PATH(
+    [[l8_subject_from_alltests]], [[$l8_alltests_from_subject]])])
 
 AS_IF([[$l8_do_distcopy]],
 [[l8_fn_add_cleanup distcopy
@@ -855,6 +858,7 @@ cat <<L8END >>"$l8_save_temp/paths.m4"
 m4@&t@_define([L8_PATH_ABS_SUBJECT],           [$l8_subject])d@&t@nl
 m4@&t@_define([L8_PATH_ROOT_FROM_SUBJECT],     [$l8_root])d@&t@nl
 m4@&t@_define([L8_PATH_ALLTESTS_FROM_SUBJECT], [$l8_alltests_from_subject])d@&t@nl
+m4@&t@_define([L8_PATH_SUBJECT_FROM_ALLTESTS], [$l8_subject_from_alltests])d@&t@nl
 m4@&t@_define([L8_PATH_ROOT_FROM_ALLTESTS],    [$l8_root_from_alltests])d@&t@nl
 m4@&t@_define([L8_PATH_BUILD_TO_TESTRUN],      [$l8_run_from_build])d@&t@nl
 m4@&t@_define([L8_PATH_TESTING_AC],            [$l8_testing_ac])d@&t@nl

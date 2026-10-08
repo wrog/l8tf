@@ -67,7 +67,9 @@ L8_CFNAME_DECLARE_SCHEMA([MOO], [
   %word R
     %kpos   relib
       %val   y      ylo
-      %val   1      pcre
+      %val   p      pcre
+      %val   1      pcre1
+      %val   2      pcre2
 
   %word U
     %kpos   unicode
@@ -88,4 +90,4 @@ L8_CFNAME_DECLARE_SCHEMA([MOO], [
       %val!  x      no
       %val   c      core
 ],
-[[g_sh_prefix_], [moo_cf_], [g_fn_prefix_], [moo_fn_]])
+[[g_sh_prefix_], [moo_cf_]])

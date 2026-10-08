@@ -7,9 +7,9 @@ m4_defun([_L8_EXPAND_WORDEXP_PREPARE],
 [AS_REQUIRE_SHELL_FN([l8_fn_expand_wordexp],
   [AS_FUNCTION_DESCRIBE([l8_fn_expand_wordexp],[WORDEXP OUT],
     [Generate a list of words from WORDEXP.
-    (whitespace separates alternates, parens group
+    (comma separates alternates, parens group
     subexpressions, all other characters are literals:
-    'a(b c)(d ef)' -> 'abd' 'abef' 'acd' 'acef');
+    'a(b,c)(d,ef)' -> 'abd' 'abef' 'acd' 'acef');
     OUT, if provided is a variable to append them to;
     otherwise the list is printed to stdout.
 ])],
@@ -46,13 +46,13 @@ while test "x$str" != x; do]
       AS_VAR_ARITH( [[lvl]], [[lvl '-' 1]])[
       str=${str@%:@?}
       continue]],[[
-    ' '*]],[
+    ','*]],[
       AS_VAR_COPY([[prev$lvl]], [[here]])
       AS_VAR_SET( [[op$here]],  [[:next]])[
-      abc="${str%%[! ]*}"
+      abc="${str%%[!,]*}"
       str="${str@%:@$abc}"
     ]],[[
-      abc="${str%%[() ]*}"]
+      abc="${str%%[(),]*}"]
       AS_VAR_COPY([[op$here]], [[abc]])[
       str="${str@%:@$abc}"]])
   AS_VAR_ARITH([[here]], [[$here '+' 1]])[
